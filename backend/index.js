@@ -25,8 +25,12 @@ mongoose
     .then(console.log("Connected to MongoDB"))
     .catch((err) => console.log("NOT CONNECTED TO NETWORK", err))
 
-app.use('/', Routes);
+app.use('/api', Routes);
 
-app.listen(PORT, () => {
-    console.log(`Server started at port no. ${PORT}`)
-})
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => {
+      console.log(`Server started at port no. ${PORT}`)
+  })
+}
+
+module.exports = app;
