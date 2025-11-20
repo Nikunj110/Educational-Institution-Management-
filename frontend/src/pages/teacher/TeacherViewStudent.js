@@ -13,7 +13,6 @@ import {
     Container, 
     Card, 
     Grid, 
-    Chip,
     CircularProgress,
     Divider
 } from '@mui/material';
@@ -28,7 +27,7 @@ import {
     EmojiEvents,
     ArrowBack
 } from '@mui/icons-material';
-import { calculateOverallAttendancePercentage, calculateSubjectAttendancePercentage, groupAttendanceBySubject } from '../../components/attendanceCalculator';
+import { calculateOverallAttendancePercentage, groupAttendanceBySubject } from '../../components/attendanceCalculator';
 import CustomPieChart from '../../components/CustomPieChart'
 import { StyledTableCell, StyledTableRow } from '../../components/styles';
 import styled from 'styled-components';
@@ -75,14 +74,9 @@ const TeacherViewStudent = () => {
         }
     }, [userDetails]);
 
-    // Safe calculation functions
+    // Safe calculation function
     const safeCalculateOverallAttendancePercentage = (attendance) => {
         const percentage = calculateOverallAttendancePercentage(attendance);
-        return typeof percentage === 'number' && !isNaN(percentage) ? percentage : 0;
-    };
-
-    const safeCalculateSubjectAttendancePercentage = (present, sessions) => {
-        const percentage = calculateSubjectAttendancePercentage(present, sessions);
         return typeof percentage === 'number' && !isNaN(percentage) ? percentage : 0;
     };
 
