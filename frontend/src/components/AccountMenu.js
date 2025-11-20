@@ -36,7 +36,7 @@ const AccountMenu = () => {
                     <IconButton
                         onClick={handleClick}
                         size="small"
-                        sx={{ 
+                        sx={{
                             ml: 2,
                             '&:hover': {
                                 backgroundColor: 'rgba(25, 118, 210, 0.1)',
@@ -78,16 +78,16 @@ const AccountMenu = () => {
                         </MenuText>
                     </StyledLink>
                 </MenuItem>
-                
+
                 <Divider sx={{ my: 1 }} />
-                
+
                 <MenuItem onClick={handleClose}>
                     <ListItemIcon sx={{ color: '#1976d2' }}>
                         <Settings fontSize="small" />
                     </ListItemIcon>
                     <MenuText>Settings</MenuText>
                 </MenuItem>
-                
+
                 <MenuItem onClick={handleLogoutClick}>
                     <ListItemIcon sx={{ color: '#1976d2' }}>
                         <Logout fontSize="small" />
