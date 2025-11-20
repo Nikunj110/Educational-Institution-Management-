@@ -1,17 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { 
-    KeyboardArrowDown, 
-    KeyboardArrowUp, 
     ExpandMore,
     ExpandLess 
 } from '@mui/icons-material';
 import { 
-    BottomNavigation, 
-    BottomNavigationAction, 
     Box, 
     Button, 
     Collapse, 
-    Paper, 
     Table, 
     TableBody, 
     TableHead, 
@@ -20,25 +15,19 @@ import {
     Card,
     Grid,
     CircularProgress,
-    Chip,
-    Stack
+    Chip
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserDetails } from '../../redux/userRelated/userHandle';
 import { calculateOverallAttendancePercentage, calculateSubjectAttendancePercentage, groupAttendanceBySubject } from '../../components/attendanceCalculator';
-import CustomBarChart from '../../components/CustomBarChart'
-import InsertChartIcon from '@mui/icons-material/InsertChart';
-import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined';
-import TableChartIcon from '@mui/icons-material/TableChart';
-import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import { StyledTableCell, StyledTableRow } from '../../components/styles';
 import styled from 'styled-components';
-import { CalendarToday, TrendingUp, EventAvailable } from '@mui/icons-material';
+import { CalendarToday, EventAvailable } from '@mui/icons-material';
 
 const ViewStdAttendance = () => {
     const dispatch = useDispatch();
-
     const [openStates, setOpenStates] = useState({});
+    const [selectedSection] = useState('table');
 
     const handleOpen = (subId) => {
         setOpenStates((prevState) => ({
@@ -57,7 +46,6 @@ const ViewStdAttendance = () => {
     else if (error) { console.log(error) }
 
     const [subjectAttendance, setSubjectAttendance] = useState([]);
-    const [selectedSection, setSelectedSection] = useState('table');
 
     useEffect(() => {
         if (userDetails) {
@@ -67,7 +55,6 @@ const ViewStdAttendance = () => {
 
     const attendanceBySubject = groupAttendanceBySubject(subjectAttendance)
 
-    // Safe calculation functions to handle potential non-number values
     const safeCalculateOverallAttendancePercentage = (attendance) => {
         const percentage = calculateOverallAttendancePercentage(attendance);
         return typeof percentage === 'number' && !isNaN(percentage) ? percentage : 0;
@@ -79,7 +66,6 @@ const ViewStdAttendance = () => {
     };
 
     const overallAttendancePercentage = safeCalculateOverallAttendancePercentage(subjectAttendance);
-    const overallAbsentPercentage = 100 - overallAttendancePercentage;
 
     const subjectData = Object.entries(attendanceBySubject).map(([subName, { subCode, present, sessions }]) => {
         const percentage = safeCalculateSubjectAttendancePercentage(present, sessions);
@@ -91,10 +77,6 @@ const ViewStdAttendance = () => {
             absentClasses: sessions - present
         };
     });
-
-    const handleSectionChange = (event, newSection) => {
-        setSelectedSection(newSection);
-    };
 
     const getAttendanceColor = (percentage) => {
         if (percentage >= 90) return '#4caf50';
@@ -195,7 +177,6 @@ const ViewStdAttendance = () => {
                                                                         <StyledTableCell align="center">
                                                                             <DayName>{dayName}</DayName>
                                                                         </StyledTableCell>
-                                                                        
                                                                     </StyledTableRow>
                                                                 )
                                                             })}
@@ -207,13 +188,126 @@ const ViewStdAttendance = () => {
                                     </StyledTableRow>
                                 </TableBody>
                             )
-                        }
-                        )}
+                        })}
                     </Table>
                 </TableContainer>
             </AttendanceCard>
         )
     }
+
+    const renderChartSection = () => {
+        const overallAbsentPercentage = 100 - overallAttendancePercentage;
+        
+        return (
+            <ChartCard>
+                <CardHeader>
+                    <Typography variant="h5" sx={{ fontWeight: 600, color: '#1976d2' }}>
+                        Attendance Overview
+                    </Typography>
+                    <OverallStats>
+                        <TableStatItem>
+                            <Typography variant="h6" sx={{ color: '#666', fontWeight: 600 }}>
+                                Overall Attendance
+                            </Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                                    <CircularProgress
+                                        variant="determinate"
+                                        value={overallAttendancePercentage}
+                                        size={110}
+                                        thickness={5}
+                                    />
+                                    <Box
+                                        sx={{
+                                            top: 0,
+                                            left: 0,
+                                            bottom: 0,
+                                            right: 0,
+                                            position: 'absolute',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                                            {overallAttendancePercentage.toFixed(0)}%
+                                        </Typography>
+                                    </Box>
+                                </Box>
+                                <Box>
+                                    <Typography variant="body2" sx={{ color: '#666' }}>
+                                        Present
+                                    </Typography>
+                                    <Typography variant="h6" sx={{ color: getAttendanceColor(overallAttendancePercentage), fontWeight: 700 }}>
+                                        {overallAttendancePercentage.toFixed(1)}%
+                                    </Typography>
+                                    <Typography variant="body2" sx={{ color: '#999' }}>
+                                        Absent {overallAbsentPercentage.toFixed(1)}%
+                                    </Typography>
+                                </Box>
+                            </Box>
+                        </TableStatItem>
+                    </OverallStats>
+                </CardHeader>
+
+                <ChartContainer>
+                    <Box sx={{ width: '100%', maxWidth: 900 }}>
+                        <ChartStats>
+                            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+                                Subject-wise Attendance
+                            </Typography>
+
+                            <Grid container spacing={2}>
+                                {subjectData.length === 0 ? (
+                                    <Grid item xs={12}>
+                                        <Typography variant="body2" sx={{ color: '#777' }}>
+                                            No subject attendance available.
+                                        </Typography>
+                                    </Grid>
+                                ) : (
+                                    subjectData.map((s, idx) => (
+                                        <Grid item xs={12} sm={6} md={4} key={idx}>
+                                            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', p: 1 }}>
+                                                <Box sx={{ position: 'relative', width: 64, height: 64 }}>
+                                                    <CircularProgress
+                                                        variant="determinate"
+                                                        value={s.attendancePercentage}
+                                                        size={64}
+                                                        thickness={5}
+                                                    />
+                                                    <Box
+                                                        sx={{
+                                                            position: 'absolute',
+                                                            inset: 0,
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                        }}
+                                                    >
+                                                        <Typography variant="caption" sx={{ fontWeight: 700 }}>
+                                                            {Math.round(s.attendancePercentage)}%
+                                                        </Typography>
+                                                    </Box>
+                                                </Box>
+                                                <Box>
+                                                    <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                                                        {s.subject}
+                                                    </Typography>
+                                                    <Typography variant="caption" sx={{ color: '#777' }}>
+                                                        {s.attendedClasses}/{s.totalClasses} classes
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
+                                        </Grid>
+                                    ))
+                                )}
+                            </Grid>
+                        </ChartStats>
+                    </Box>
+                </ChartContainer>
+            </ChartCard>
+        );
+    };
 
     return (
         <StyledContainer>
@@ -239,8 +333,6 @@ const ViewStdAttendance = () => {
 
                             {selectedSection === 'table' && renderTableSection()}
                             {selectedSection === 'chart' && renderChartSection()}
-
-                            
                         </>
                     ) : (
                         <EmptyStateContainer>
@@ -271,120 +363,6 @@ const ViewStdAttendance = () => {
 
 export default ViewStdAttendance;
 
-// add this function somewhere above the `return ( ... )` in the same file
-const renderChartSection = () => {
-  return (
-    <ChartCard>
-      <CardHeader>
-        <Typography variant="h5" sx={{ fontWeight: 600, color: '#1976d2' }}>
-          Attendance Overview
-        </Typography>
-        <OverallStats>
-          <TableStatItem>
-            <Typography variant="h6" sx={{ color: '#666', fontWeight: 600 }}>
-              Overall Attendance
-            </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-                <CircularProgress
-                  variant="determinate"
-                  value={overallAttendancePercentage}
-                  size={110}
-                  thickness={5}
-                />
-                <Box
-                  sx={{
-                    top: 0,
-                    left: 0,
-                    bottom: 0,
-                    right: 0,
-                    position: 'absolute',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                    {overallAttendancePercentage.toFixed(0)}%
-                  </Typography>
-                </Box>
-              </Box>
-              <Box>
-                <Typography variant="body2" sx={{ color: '#666' }}>
-                  Present
-                </Typography>
-                <Typography variant="h6" sx={{ color: getAttendanceColor(overallAttendancePercentage), fontWeight: 700 }}>
-                  {overallAttendancePercentage.toFixed(1)}%
-                </Typography>
-                <Typography variant="body2" sx={{ color: '#999' }}>
-                  Absent {overallAbsentPercentage.toFixed(1)}%
-                </Typography>
-              </Box>
-            </Box>
-          </TableStatItem>
-        </OverallStats>
-      </CardHeader>
-
-      <ChartContainer>
-        <Box sx={{ width: '100%', maxWidth: 900 }}>
-          <ChartStats>
-            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
-              Subject-wise Attendance
-            </Typography>
-
-            <Grid container spacing={2}>
-              {subjectData.length === 0 ? (
-                <Grid item xs={12}>
-                  <Typography variant="body2" sx={{ color: '#777' }}>
-                    No subject attendance available.
-                  </Typography>
-                </Grid>
-              ) : (
-                subjectData.map((s, idx) => (
-                  <Grid item xs={12} sm={6} md={4} key={idx}>
-                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', p: 1 }}>
-                      <Box sx={{ position: 'relative', width: 64, height: 64 }}>
-                        <CircularProgress
-                          variant="determinate"
-                          value={s.attendancePercentage}
-                          size={64}
-                          thickness={5}
-                        />
-                        <Box
-                          sx={{
-                            position: 'absolute',
-                            inset: 0,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                          }}
-                        >
-                          <Typography variant="caption" sx={{ fontWeight: 700 }}>
-                            {Math.round(s.attendancePercentage)}%
-                          </Typography>
-                        </Box>
-                      </Box>
-                      <Box>
-                        <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                          {s.subject}
-                        </Typography>
-                        <Typography variant="caption" sx={{ color: '#777' }}>
-                          {s.attendedClasses}/{s.totalClasses} classes
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Grid>
-                ))
-              )}
-            </Grid>
-          </ChartStats>
-        </Box>
-      </ChartContainer>
-    </ChartCard>
-  );
-};
-
-
 // Styled Components
 const StyledContainer = styled(Container)`
   padding: 40px 24px;
@@ -403,7 +381,6 @@ const HeaderSection = styled(Box)`
   margin-bottom: 48px;
 `;
 
-// Card Styles
 const AttendanceCard = styled(Card)`
   border-radius: 20px;
   background: white;
@@ -447,7 +424,6 @@ const ChartContainer = styled(Box)`
   justify-content: center;
 `;
 
-// Loading State
 const LoadingContainer = styled(Box)`
   display: flex;
   flex-direction: column;
@@ -460,7 +436,6 @@ const LoadingContainer = styled(Box)`
   border: 1px solid #e0e0e0;
 `;
 
-// Empty State
 const EmptyStateContainer = styled(Box)`
   display: flex;
   justify-content: center;
@@ -478,20 +453,6 @@ const EmptyStateCard = styled(Card)`
   max-width: 500px;
 `;
 
-// Navigation
-const NavigationPaper = styled(Paper)`
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: auto;
-  min-width: 300px;
-  border-radius: 20px 20px 0 0;
-  border: 1px solid #e0e0e0;
-  border-bottom: none;
-`;
-
-// Table Components
 const OverallStats = styled(Box)`
   display: flex;
   gap: 24px;
@@ -533,12 +494,6 @@ const TotalCount = styled(Typography)`
   color: #666;
 `;
 
-const AttendancePercentage = styled(Typography)`
-  font-size: 16px;
-  font-weight: 700;
-  color: ${props => getAttendanceColor(props.percentage)};
-`;
-
 const DetailButton = styled(Button)`
   border-radius: 8px;
   font-weight: 600;
@@ -559,78 +514,17 @@ const DayName = styled(Typography)`
   font-weight: 500;
 `;
 
-const StatusChip = styled(Chip)`
-  border-radius: 20px;
-  font-weight: 600;
-  background: ${props => props.status === 'Present' ? '#e8f5e8' : '#ffebee'};
-  color: ${props => props.status === 'Present' ? '#4caf50' : '#f44336'};
-  border: 1px solid ${props => props.status === 'Present' ? '#4caf50' : '#f44336'};
-`;
-
-// Chart Components
 const ChartStats = styled(Box)`
   padding: 24px 32px;
   border-top: 1px solid #f0f0f0;
   background: #fafafa;
 `;
 
-const StatSummary = styled(Box)`
-  display: flex;
-  gap: 32px;
-  justify-content: center;
-  flex-wrap: wrap;
-`;
-
-const StatItem = styled(Box)`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-`;
-
-const StatDot = styled(Box)`
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: ${props => props.color === 'present' ? '#4caf50' : '#f44336'};
-`;
-
-const StatText = styled(Box)`
-  display: flex;
-  flex-direction: column;
-  
-  span {
-    font-size: 14px;
-    color: #666;
-  }
-  
-  strong {
-    font-size: 18px;
-    color: #333;
-    font-weight: 600;
-  }
-`;
-
-// Helper function for attendance color
-const getAttendanceColor = (percentage) => {
-    if (percentage >= 90) return '#4caf50';
-    if (percentage >= 80) return '#8bc34a';
-    if (percentage >= 70) return '#ff9800';
-    if (percentage >= 60) return '#ff5722';
-    return '#f44336';
-};
-
-// Style Objects
 const detailButtonStyles = {
     borderColor: '#1976d2',
     color: '#1976d2',
     '&:hover': {
         backgroundColor: 'rgba(25, 118, 210, 0.04)',
         borderColor: '#1565c0',
-    }
-};
-
-const navActionStyles = {
-    '&.Mui-selected': {
-        color: '#1976d2',
     }
 };
