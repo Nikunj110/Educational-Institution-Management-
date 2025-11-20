@@ -271,6 +271,120 @@ const ViewStdAttendance = () => {
 
 export default ViewStdAttendance;
 
+// add this function somewhere above the `return ( ... )` in the same file
+const renderChartSection = () => {
+  return (
+    <ChartCard>
+      <CardHeader>
+        <Typography variant="h5" sx={{ fontWeight: 600, color: '#1976d2' }}>
+          Attendance Overview
+        </Typography>
+        <OverallStats>
+          <TableStatItem>
+            <Typography variant="h6" sx={{ color: '#666', fontWeight: 600 }}>
+              Overall Attendance
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                <CircularProgress
+                  variant="determinate"
+                  value={overallAttendancePercentage}
+                  size={110}
+                  thickness={5}
+                />
+                <Box
+                  sx={{
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                    position: 'absolute',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                    {overallAttendancePercentage.toFixed(0)}%
+                  </Typography>
+                </Box>
+              </Box>
+              <Box>
+                <Typography variant="body2" sx={{ color: '#666' }}>
+                  Present
+                </Typography>
+                <Typography variant="h6" sx={{ color: getAttendanceColor(overallAttendancePercentage), fontWeight: 700 }}>
+                  {overallAttendancePercentage.toFixed(1)}%
+                </Typography>
+                <Typography variant="body2" sx={{ color: '#999' }}>
+                  Absent {overallAbsentPercentage.toFixed(1)}%
+                </Typography>
+              </Box>
+            </Box>
+          </TableStatItem>
+        </OverallStats>
+      </CardHeader>
+
+      <ChartContainer>
+        <Box sx={{ width: '100%', maxWidth: 900 }}>
+          <ChartStats>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+              Subject-wise Attendance
+            </Typography>
+
+            <Grid container spacing={2}>
+              {subjectData.length === 0 ? (
+                <Grid item xs={12}>
+                  <Typography variant="body2" sx={{ color: '#777' }}>
+                    No subject attendance available.
+                  </Typography>
+                </Grid>
+              ) : (
+                subjectData.map((s, idx) => (
+                  <Grid item xs={12} sm={6} md={4} key={idx}>
+                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', p: 1 }}>
+                      <Box sx={{ position: 'relative', width: 64, height: 64 }}>
+                        <CircularProgress
+                          variant="determinate"
+                          value={s.attendancePercentage}
+                          size={64}
+                          thickness={5}
+                        />
+                        <Box
+                          sx={{
+                            position: 'absolute',
+                            inset: 0,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Typography variant="caption" sx={{ fontWeight: 700 }}>
+                            {Math.round(s.attendancePercentage)}%
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Box>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                          {s.subject}
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: '#777' }}>
+                          {s.attendedClasses}/{s.totalClasses} classes
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Grid>
+                ))
+              )}
+            </Grid>
+          </ChartStats>
+        </Box>
+      </ChartContainer>
+    </ChartCard>
+  );
+};
+
+
 // Styled Components
 const StyledContainer = styled(Container)`
   padding: 40px 24px;
