@@ -7,14 +7,11 @@ import {
     Box, 
     Avatar, 
     Container,
-    Chip,
-    Grid,
-    Divider
+    Chip
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { 
     School, 
-    Person, 
     Class, 
     Subject,
     Email,
@@ -165,8 +162,6 @@ const TeacherProfile = () => {
                                 </StatContent>
                             </StatItem>
                         </TeachingStats>
-
-                        
                     </CardContent>
                 </DetailsCard>
             </ProfileGrid>
@@ -228,10 +223,6 @@ const CardHeader = styled(Box)`
   border-bottom: 1px solid #f0f0f0;
   background: #fafafa;
   border-radius: 20px 20px 0 0;
-`;
-
-const CardContent1 = styled(Box)`
-  padding: 32px;
 `;
 
 // Avatar
@@ -342,25 +333,4 @@ const StatValue = styled(Typography)`
   font-size: 20px;
   color: #333;
   font-weight: 700;
-`;
-
-// Quick Info
-const QuickInfo = styled(Box)`
-  margin-top: 16px;
-`;
-
-const InfoList = styled(Box)`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
-const QuickInfoItem = styled(Box)`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  background: #f8fbff;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
 `;
