@@ -15,13 +15,11 @@ import {
     Grid, 
     Chip,
     CircularProgress,
-    Paper,
-    Stack,
     Divider
 } from '@mui/material';
 import { 
     KeyboardArrowDown, 
-    KeyboardArrowUp, 
+    KeyboardArrowUp,
     Person,
     School,
     Class,
@@ -34,14 +32,6 @@ import { calculateOverallAttendancePercentage, calculateSubjectAttendancePercent
 import CustomPieChart from '../../components/CustomPieChart'
 import { StyledTableCell, StyledTableRow } from '../../components/styles';
 import styled from 'styled-components';
-
-const getAttendanceColor = (percentage) => {
-        if (percentage >= 90) return '#4caf50';
-        if (percentage >= 80) return '#8bc34a';
-        if (percentage >= 70) return '#ff9800';
-        if (percentage >= 60) return '#ff5722';
-        return '#f44336';
-};
 
 const TeacherViewStudent = () => {
 
@@ -216,7 +206,6 @@ const TeacherViewStudent = () => {
                                         <>
                                             {Object.entries(groupAttendanceBySubject(subjectAttendance)).map(([subName, { present, allData, subId, sessions }], index) => {
                                                 if (subName === teachSubject) {
-                                                    const percentage = safeCalculateSubjectAttendancePercentage(present, sessions);
                                                     const absentClasses = sessions - present;
 
                                                     return (
@@ -270,7 +259,6 @@ const TeacherViewStudent = () => {
                                                                                         <TableHead>
                                                                                             <StyledTableRow>
                                                                                                 <StyledTableCell>Date</StyledTableCell>
-                                                                                                
                                                                                             </StyledTableRow>
                                                                                         </TableHead>
                                                                                         <TableBody>
@@ -282,7 +270,6 @@ const TeacherViewStudent = () => {
                                                                                                         <StyledTableCell component="th" scope="row">
                                                                                                             {dateString}
                                                                                                         </StyledTableCell>
-                                                                                                        
                                                                                                     </StyledTableRow>
                                                                                                 );
                                                                                             })}
@@ -622,12 +609,6 @@ const TotalCount = styled(Typography)`
   color: #666;
 `;
 
-const AttendancePercentage = styled(Typography)`
-  font-size: 16px;
-  font-weight: 700;
-  color: ${props => getAttendanceColor(props.percentage)};
-`;
-
 const DetailButton = styled(Button)`
   border-radius: 8px;
   font-weight: 600;
@@ -640,14 +621,6 @@ const DetailsContainer = styled(Box)`
   background: #f8fbff;
   border-radius: 12px;
   border: 1px solid #e0e0e0;
-`;
-
-const StatusChip = styled(Chip)`
-  border-radius: 20px;
-  font-weight: 600;
-  background: ${props => props.status === 'Present' ? '#e8f5e8' : '#ffebee'};
-  color: ${props => props.status === 'Present' ? '#4caf50' : '#f44336'};
-  border: 1px solid ${props => props.status === 'Present' ? '#4caf50' : '#f44336'};
 `;
 
 // Marks Components
