@@ -1,4 +1,4 @@
-import { Container, Grid, Paper, Typography, Box, Card, CircularProgress } from '@mui/material'
+import { Container, Grid, Typography, Box, Card, CircularProgress } from '@mui/material'
 import SeeNotice from '../../components/SeeNotice';
 import CountUp from 'react-countup';
 import styled from 'styled-components';
@@ -169,22 +169,6 @@ const StatsCard = styled(Card)`
   }
 `;
 
-const SummaryCard = styled(Card)`
-  border-radius: 20px;
-  background: white;
-  box-shadow: 0 8px 32px rgba(25, 118, 210, 0.1);
-  border: 1px solid #e0e0e0;
-  height: 100%;
-`;
-
-const InfoCard = styled(Card)`
-  border-radius: 20px;
-  background: white;
-  box-shadow: 0 8px 32px rgba(25, 118, 210, 0.1);
-  border: 1px solid #e0e0e0;
-  height: 100%;
-`;
-
 const NoticeCard = styled(Card)`
   border-radius: 20px;
   background: white;
@@ -205,14 +189,6 @@ const CardHeader = styled(Box)`
   border-bottom: 1px solid #f0f0f0;
   background: #fafafa;
   border-radius: 20px 20px 0 0;
-`;
-
-const SummaryContent = styled(Box)`
-  padding: 32px;
-`;
-
-const InfoContent = styled(Box)`
-  padding: 24px;
 `;
 
 const NoticeContent = styled(Box)`
@@ -286,126 +262,6 @@ const ClassValue = styled(Typography)`
   font-weight: 700;
   color: #9c27b0;
   display: block;
-`;
-
-// Summary Components
-const SummaryGrid = styled(Box)`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 24px;
-  margin-bottom: 32px;
-`;
-
-const SummaryItem = styled(Box)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  background: #f8fbff;
-  border-radius: 12px;
-  border: 1px solid #e0e0e0;
-  text-align: center;
-`;
-
-const SummaryLabel = styled(Typography)`
-  font-size: 14px;
-  color: #666;
-  font-weight: 500;
-  margin-bottom: 8px;
-`;
-
-const SummaryValue = styled(Typography)`
-  font-size: 24px;
-  color: #1976d2;
-  font-weight: 700;
-`;
-
-// Quick Actions
-const QuickActions = styled(Box)`
-  margin-top: 24px;
-`;
-
-const ActionGrid = styled(Box)`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-`;
-
-const ActionItem = styled(Box)`
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 20px;
-  background: #f8fbff;
-  border-radius: 12px;
-  border: 1px solid #e0e0e0;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.15);
-    background: white;
-  }
-`;
-
-const ActionIcon = styled(Box)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 12px;
-  
-  &.attendance {
-    background: rgba(25, 118, 210, 0.1);
-    color: #1976d2;
-  }
-  
-  &.marks {
-    background: rgba(76, 175, 80, 0.1);
-    color: #4caf50;
-  }
-`;
-
-const ActionText = styled(Box)`
-  flex: 1;
-  
-  div {
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 4px;
-  }
-  
-  small {
-    color: #666;
-    font-size: 12px;
-  }
-`;
-
-// Info Components
-const InfoItem = styled(Box)`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 0;
-  border-bottom: 1px solid #f0f0f0;
-  
-  &:last-child {
-    border-bottom: none;
-  }
-`;
-
-const InfoLabel = styled(Typography)`
-  font-size: 14px;
-  color: #666;
-  font-weight: 500;
-`;
-
-const InfoValue = styled(Typography)`
-  font-size: 16px;
-  color: #333;
-  font-weight: 600;
 `;
 
 // Style Objects
